@@ -5,7 +5,7 @@ import Home from "../routes/Home";
 import Profile from "../routes/Profile";
 import Navigation from "./Navigation"
 
-const AppRouter = (isLoggedIn)=>{
+const AppRouter = (isLoggedIn, {userInfo})=>{
     const flag=isLoggedIn[Object.keys(isLoggedIn)[0]];
 
     return( 
@@ -14,7 +14,7 @@ const AppRouter = (isLoggedIn)=>{
             <Switch>
                 {flag? (
                     <> 
-                        <Route exact path="/"><Home /></Route>
+                        <Route exact path="/"><Home userInfo={isLoggedIn.userInfo}/></Route>
                         <Route exact path="/profile"><Profile /></Route>
                         <Redirect from="*" to="/" />
                     </>
