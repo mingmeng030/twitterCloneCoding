@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import { deleteDoc, updateDoc, doc } from '@firebase/firestore'
-import { dbService } from "fBase";
+import { dbService, storageService } from "fBase";
+import { ref, deleteObject } from "@firebase/storage";
+
 
 const Tweet = ({ tweetObj, isOwner})=>{
     const TweetTextRef = doc(dbService, "tweets", `${tweetObj.id}`);
@@ -9,7 +11,12 @@ const Tweet = ({ tweetObj, isOwner})=>{
     
     const onDeleteClick = async() =>{
         const ok=window.confirm("Are you sure you wanna delete this tweet?");
-        if(ok) await deleteDoc(TweetTextRef);
+        //url에서 reference를 받아와 해당 id를 가진 tweet의 tweetObj와 사진을 삭제
+        if (ok) {
+            await deleteDoc(doc(dbService, `tweets/${tweetObj.id}`));
+            if(tweetObj.attachmentUrl)
+                await deleteObject(ref(storageService, tweetObj.attachmentUrl));    
+        }
     };
 
     const onSubmit=async(e)=>{
@@ -23,9 +30,6 @@ const Tweet = ({ tweetObj, isOwner})=>{
         setNewTweet(value);
     };
 
-    // return 문 내의 삼항연산자를 통해 editing이 true이면 edit form이 보이고
-    // false 이면 edit form이 보이지 않는다.
-    // toggledEditing은 setEditing의 상태를 true이면 false로 false이면 true로 변경한다.ㅁ
     const toggledEditing = () => setEditing((prev)=>!prev);
 
     return(
@@ -41,6 +45,7 @@ const Tweet = ({ tweetObj, isOwner})=>{
                 </>
                 : <> 
                     <h4>{tweetObj.text}</h4>
+                    {tweetObj.attachmentUrl && <img src={tweetObj.attachmentUrl} width="100px" height="100px" /> }
                     {isOwner&&(
                     <>
                         <button onClick={onDeleteClick}>Delete Tweet</button>
