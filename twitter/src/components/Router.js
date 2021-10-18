@@ -10,12 +10,12 @@ const AppRouter = (isLoggedIn, {userInfo})=>{
 
     return( 
         <Router>
-            {flag&&<Navigation/>}
+            {flag&&<Navigation userInfo={isLoggedIn.userInfo}/>}
             <Switch>
                 {flag? (
                     <> 
                         <Route exact path="/"><Home userInfo={isLoggedIn.userInfo}/></Route>
-                        <Route exact path="/profile"><Profile /></Route>
+                        <Route exact path="/profile"><Profile userInfo={isLoggedIn.userInfo}/></Route>
                         <Redirect from="*" to="/" />
                     </>
                 ) : (

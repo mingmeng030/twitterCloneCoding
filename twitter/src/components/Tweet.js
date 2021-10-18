@@ -11,7 +11,6 @@ const Tweet = ({ tweetObj, isOwner})=>{
     
     const onDeleteClick = async() =>{
         const ok=window.confirm("Are you sure you wanna delete this tweet?");
-        //url에서 reference를 받아와 해당 id를 가진 tweet의 tweetObj와 사진을 삭제
         if (ok) {
             await deleteDoc(doc(dbService, `tweets/${tweetObj.id}`));
             if(tweetObj.attachmentUrl)
